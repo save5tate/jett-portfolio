@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jett Giammarusti - Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+	
+	<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<header>
+    <h1>Jett Giammarusti</h1>
+</header>
+
+<section class="welcome-section">
+    <div class="welcome" id="welcomeMessage">
+        
+    </div>
+</section>
+
+<section>
+    <h2>About Me</h2>
+    <p>
+        I am a 25-year-old sophomore student at OCC focusing on CIS Software Engineering. I work as a server, play poker professionally, and enjoy competitive Pokémon.
+    </p>
+</section>
+
+<section>
+    <h2>Current Classes</h2>
+    <table>
+        <tr>
+            <th>Class</th>
+        </tr>
+        <tr>
+            <td>Front-End Web Technologies</td>
+        </tr>
+        <tr>
+            <td>Interpersonal Communication</td>
+        </tr>
+        <tr>
+            <td>Data Structures</td>
+        </tr>
+        <tr>
+            <td>JAVA Programming</td>
+        </tr>
+    </table>
+</section>
+
+<section>
+    <h2>My 3 Favorite Things</h2>
+    <ul>
+        <li><strong>Sports:</strong> I love watching sports and betting professionally.</li>
+        <li><strong>Poker:</strong> I’ve been playing for 9 years and hope to play full-time one day.</li>
+        <li><strong>Video Games:</strong> I’ve competed at a high level and still enjoy playing today.</li>
+    </ul>
+</section>
+
+<section>
+    <h2>My Favorite Pokémon</h2>
+    <div class="pokemon-gallery">
+        <img src="azelf.png" alt="Azelf">
+        <img src="bellossom.png" alt="Bellossom">
+        <img src="cofagrigus.png" alt="Cofagrigus">
+    </div>
+</section>
+
+<script>
+    
+    const nameKey = 'username';
+    const lastVisitKey = 'lastVisit';
+
+    function getCurrentDateTime() {
+        const now = new Date();
+        const time = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: true });
+        const date = now.toLocaleDateString('en-US', { timeZone: 'America/New_York' });
+        return { time, date };
+    }
+
+    function mapWeatherCodeToDescription(code) {
+        const weatherDescriptions = {
+            0: 'clear sky',
+            1: 'mainly clear',
+            2: 'partly cloudy',
+            3: 'overcast',
+            45: 'fog',
+            48: 'depositing rime fog',
+            51: 'drizzle: light',
+            53: 'drizzle: moderate',
+            55: 'drizzle: dense',
+            61: 'rain: slight',
+            63: 'rain: moderate',
+            65: 'rain: heavy',
+            71: 'snow fall: slight',
+            73: 'snow fall: moderate',
+            75: 'snow fall: heavy',
+            80: 'rain showers: slight',
+            81: 'rain showers: moderate',
+            82: 'rain showers: violent'
+        };
+        return weatherDescriptions[code] || 'unknown';
+    }
+
+    async function fetchWeather() {
+        try {
+            const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=42.3314&longitude=-83.0458&current_weather=true');
+            const data = await response.json();
+            return mapWeatherCodeToDescription(data.current_weather.weathercode);
+        } catch (err) {
+            console.error('Error fetching weather:', err);
+            return 'unknown';
+        }
+    }
+
+    function getGreeting(hour) {
+        if (hour < 12) return 'Good morning';
+        if (hour < 18) return 'Good afternoon';
+        return 'Good evening';
+    }
+
+    async function showWelcomeMessage() {
+        let username = localStorage.getItem(nameKey);
+        if (!username) {
+            username = prompt("Enter your name:");
+            if (username) localStorage.setItem(nameKey, username);
+        }
+
+        const lastVisit = localStorage.getItem(lastVisitKey);
+        const { time, date } = getCurrentDateTime();
+        localStorage.setItem(lastVisitKey, `${date} at ${time}`);
+
+        const weather = await fetchWeather();
+
+        const nowHour = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour12: false }).split(',')[1].split(':')[0];
+        const greeting = getGreeting(Number(nowHour));
+
+        let message = `${greeting} ${username}! It's ${time} EST on ${date}, and it's ${weather} right now.`;
+        if (lastVisit) message += `<br>Btw, you last visited on ${lastVisit}.`;
+
+        document.getElementById('welcomeMessage').innerHTML = message;
+    }
+
+    showWelcomeMessage();
+    setInterval(showWelcomeMessage, 1000);
+</script>
+
+</body>
+</html>
