@@ -5,21 +5,17 @@
     <title>Jett Giammarusti - Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Minimal styling for welcome message */
-        #welcome-message {
-            margin: 20px 0;
-            font-size: 1.2em;
-            font-weight: 500;
-            color: #222;
-        }
-    </style>
 </head>
 <body>
 
 <header>
     <h1>Jett Giammarusti</h1>
 </header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="teams.html">OU Teams</a>
+</nav>
 
 <section id="welcome-section">
     <form id="nameForm">
@@ -134,7 +130,7 @@ async function fetchWeather() {
     }
 }
 
-// Update welcome message every second
+
 async function updateWelcomeMessage() {
     const name = localStorage.getItem('userName') || '';
     const lastVisit = localStorage.getItem('lastVisit');
@@ -173,5 +169,6 @@ setInterval(updateWelcomeMessage, 1000);
 
 </body>
 </html>
+
 
 
